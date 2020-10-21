@@ -24,13 +24,13 @@ const typeDefs = `
 
     type Query{
         users: [User!]
-        user(email: String!): User 
+        user(_id: ID!): User 
     }
 
     type Mutation {
         addUser( email: String!, name: String!, username: String!, password: String):ID!
-        deleteUser( email: String! ):ID!
-        updateUser( email: String!, name: String, username: String, password: String):ID!
+        deleteUser( _id: ID! ):ID!
+        updateUser( _id: ID! , name: String, username: String, password: String):ID!
     }
 `;
 
@@ -41,9 +41,9 @@ const resolvers = {
       users = await users.find({}).toArray();
       return users;
     },
-    user: async (parent, { email }) => {
+    user: async (parent, { _id }) => {
       const users = await loadMongoCollection('Users');
-      const foundUser = await users.findOne({ email: email });
+      const foundUser = await users.findOne({ _id: mongodb.ObjectID(_id) });
       return foundUser;
     },
   },
@@ -63,11 +63,11 @@ const resolvers = {
         return e;
       }
     },
-    deleteUser: async (parent, { email }) => {
+    deleteUser: async (parent, { _id }) => {
       try {
         const users = await loadMongoCollection('Users');
         await users.deleteOne({
-          email: email,
+          _id: mongodb.ObjectID(_id),
         });
         return "status: 'ok'";
       } catch (e) {
@@ -78,12 +78,12 @@ const resolvers = {
       try {
         const users = await loadMongoCollection('Users');
         // Create new object to apply & remove id key
-        const { email } = args;
+        const { _id } = args;
         let updated = Object.assign({}, args);
-        delete updated['email'];
+        delete updated['_id'];
         await users.updateOne(
           {
-            email: email,
+            _id: mongodb.ObjectID(_id),
           },
           {
             $set: updated,
