@@ -1,0 +1,19 @@
+{
+  "name": "graphql-yoga-mongodb",
+  "version": "1.0.0",
+  "description": "Simple graphql server connected to mongodb cluster",
+  "main": "server.js",
+  "scripts": {
+    "dev:server": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "graphql-yoga": "^1.18.3",
+    "mongodb": "^3.6.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
